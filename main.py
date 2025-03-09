@@ -12,6 +12,7 @@
 # Дополнительно:
 # Попробуйте добавить дополнительные функции в вашу программу, такие как сохранение информации о зоопарке в файл
 # и возможность её загрузки, чтобы у вашего зоопарка было "постоянное состояние" между запусками программы.
+import pickle
 
 class Animal:
     def __init__(self, name, age):
@@ -94,6 +95,20 @@ class Zoo:
                 f"Работники:\n{workers_str}\n"
                 f"Животные:\n{animals_str}")
 
+    def save_to_file(self, filename):
+        """Сохраняет объект зоопарка в файл"""
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+        print(f"Зоопарк сохранён в файл {filename}")
+
+    @staticmethod
+    def load_from_file(filename):
+        """Загружает объект зоопарка из файла"""
+        with open(filename, 'rb') as f:
+            zoo = pickle.load(f)
+        print(f"Зоопарк загружен из файла {filename}")
+        return zoo
+
 def animal_sound(animals):
     for animal in animals:
         animal.make_sound()
@@ -122,3 +137,18 @@ for worker in zoo1.workers:
 
 print("\nИнформация о зоопарке:")
 print(zoo1)
+
+
+# Сохранение зоопарка
+zoo1.save_to_file('my_zoo.pkl')
+
+# Загрузка зоопарка
+loaded_zoo = Zoo.load_from_file('my_zoo.pkl')
+
+print("\nЗагруженный зоопарк:")
+print(loaded_zoo)
+
+# Проверка работоспособности методов
+print("\nПроверка методов загруженного зоопарка:")
+loaded_zoo.workers[0].heal_animal()
+loaded_zoo.animals[0].make_sound()
